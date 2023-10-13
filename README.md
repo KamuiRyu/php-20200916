@@ -109,4 +109,9 @@ php artisan serve
 Seu servidor estará disponível em: http://localhost:8000
 
 
+## Comandos
+Alguns comandos personalizados
+
+-   php artisan app:syncproducts # Força a sincronização dos produtos.
+
 
