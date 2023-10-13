@@ -59,7 +59,7 @@ docker-compose up -d --build
 
 2. Após concluir a construção dos containers, executar o seguinte comando:
 ```bash
-docker-compose exec app bash   
+docker exec app bash   
 ```
 
 3. Dentro do terminal do container, execute este comando:
