@@ -115,3 +115,35 @@ Alguns comandos personalizados
 -   php artisan app:syncproducts    #Força a sincronização dos produtos.
 
 
+## Documentação API
+
+### Rotas da API
+
+A API oferece as seguintes rotas:
+
+-    `GET /api/products`: Retorna todos os produtos.
+-    `GET /api/products/{code}`: Retorna um produto específico pelo código.
+-    `POST /api/products`: Cria um novo produto.
+-    `PUT /api/products/{code}`: Atualiza um produto existente.
+-    `DELETE /api/products/{code}`: Exclui um produto pelo código.
+
+### Exemplos de Solicitação e Resposta
+
+#### `GET /api/products`
+
+Resposta:
+
+```json
+[
+    {
+        "code": "12345",
+        "product_name": "Produto 1",
+        "price": 10.99
+    },
+    {
+        "code": "67890",
+        "product_name": "Produto 2",
+        "price": 19.99
+    }
+]
+```
