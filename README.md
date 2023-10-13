@@ -67,7 +67,12 @@ docker-compose exec app bash
 composer install
 ```
 
-4. Depois da instalação, você precisará gerar uma key:
+4. Executar as migrations:
+```bash
+php artisan migrate
+```
+
+5. Depois da instalação, você precisará gerar uma key:
 ```bash
 php artisan key:generate
 ```
@@ -91,7 +96,12 @@ composer install
 php artisan key:generate
 ```
 
-4. E depois execute:
+4. Executar as migrations:
+```bash
+php artisan migrate
+```
+
+5. E depois execute:
 ```bash
 php artisan serve
 ```
