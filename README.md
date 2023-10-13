@@ -31,3 +31,72 @@ A REST API que estamos desenvolvendo oferecerá as seguintes funcionalidades pri
   <br>
 </p>
 
+## Pré-Requisitos
+
+### Com Docker
+-   Docker Engine ou Docker Desktop
+
+### Sem Docker
+-   Node.js (v16.0.0 ou maior)
+-   PHP 8.1
+-   Postgresql
+
+## Instalação
+
+A configuração do .env é necessária nesta etapa. Não altere as configurações do banco de dados, apenas se for realizar a instalação sem utilizar o docker. Existe algumas várivas novas dentro do .env, elas são:
+
+-   PRODUCTS_SYNC # Link para buscar os nomes do arquivos para sincronização. Padrão: https://challenges.coode.sh/food/data/json/index.txt
+-   PRODUCTS_ENDPOINT # Link para baixar os arquivos para a sincronização. Padrão: https://challenges.coode.sh/food/data/json/
+-   LIMIT_LINES # Quantidade de linhas que será importada por arquivo. Padrão: 100
+-   LIMIT_QUERY # Quantidade máxima de linhas que será retornada por offset. Padrão: 100
+
+### Docker
+
+1. Na pasta raiz do projeto, execute o comando abaixo:
+```bash
+docker-compose up -d --build
+```
+
+2. Após concluir a construção dos containers, executar o seguinte comando:
+```bash
+docker-compose exec app bash   
+```
+
+3. Dentro do terminal do container, execute este comando:
+```bash
+composer install
+```
+
+4. Depois da instalação, você precisará gerar uma key:
+```bash
+php artisan key:generate
+```
+
+Seu servidor estará disponível em: http://localhost:8989
+
+### Sem Docker
+
+1. Na pasta raiz do projeto, execute o comando abaixo:
+```bash
+cd apps/app
+```
+
+2. Depois execute o seguinte comando:
+```bash
+composer install  
+```
+
+3. Depois da instalação do projeto, execute:
+```bash
+php artisan key:generate
+```
+
+4. E depois execute:
+```bash
+php artisan serve
+```
+
+Seu servidor estará disponível em: http://localhost:8000
+
+
+
