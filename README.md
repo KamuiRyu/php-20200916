@@ -254,6 +254,25 @@ Aqui está a descrição de todos os campos usados nas rotas da API:
 
 ### Exemplos de Solicitação e Resposta
 
+#### `GET /api/`
+
+Resposta:
+
+```json
+{
+   "cabecalho":{
+      "status":200,
+      "mensagem":"Dados retornados com sucesso"
+   },
+   "retorno":{
+      "db_conexao":"OK",
+      "ultima_sincronizacao":"12/10/2023",
+      "resposta_ultima_sincronizacao":"Os produtos foram sincronizados com sucesso!",
+      "uso_memoria":"20MB"
+   }
+}
+```
+
 #### `GET /api/products`
 
 Solicitação:
@@ -433,4 +452,42 @@ Resposta:
       "mensagem":"Produto excluído com sucesso"
    }
 }
+```
+
+## Unit test
+
+#### `Todas as rotas`
+
+```bash
+php artisan test --filter ProductApiTest
+```
+
+#### `GET /api/`
+
+```bash
+php artisan test --filter ProductApiTest::testHealthCheck
+```
+
+#### `GET /api/products`
+
+```bash
+php artisan test --filter ProductApiTest::testGetAllProducts
+```
+
+#### `GET /api/products/{code}`
+
+```bash
+php artisan test --filter ProductApiTest::testGetProduct
+```
+
+#### `PUT /api/products/{code}`
+
+```bash
+php artisan test --filter ProductApiTest::testUpdateProduct
+```
+
+#### `DELETE /api/products/{code}`
+
+```bash
+php artisan test --filter ProductApiTest::testDeleteProduct
 ```
