@@ -273,7 +273,7 @@ Solicitação:
 Resposta:
 
 ```json
-[
+{
    "cabecalho":{
       "status":200,
       "mensagem":"Dados retornados com sucesso"
@@ -334,7 +334,7 @@ Resposta:
          }
       ]
    }
-]
+}
 ```
 
 #### `GET /api/products/{code}`
@@ -342,7 +342,7 @@ Resposta:
 Resposta:
 
 ```json
-[
+{
    "cabecalho":{
       "status":200,
       "mensagem":"Dados retornados com sucesso"
@@ -372,23 +372,23 @@ Resposta:
       "created_t":"2018-06-15T13:38:00.000000Z",
       "last_modified_t":"2019-06-25T14:55:18.000000Z"
    }
-]
+}
 ```
 
 #### `PUT /api/products/{code}: 
 
 Solicitação:
 ```json
-[
+{
    "product_name":"Teste",
    "categories":"fruta"
-]
+}
 ```
 
 Resposta:
 
 ```json
-[
+{
    "cabecalho":{
       "status":200,
       "mensagem":"Dados atualizados com sucesso"
@@ -419,7 +419,7 @@ Resposta:
       "created_t":"2018-10-14T00:06:14.000000Z",
       "last_modified_t":"2023-10-14T00:15:48.000000Z"
    }
-]
+}
 ```
 
 #### `DELETE /api/products/{code}`
@@ -427,10 +427,10 @@ Resposta:
 Resposta:
 
 ```json
-[
-   "cabecalho""=>"[
-      "status"=> 204,
-      "mensagem""=>""Produto excluído com sucesso"
-   ]
-]
+{
+   "cabecalho":{
+      "status":204,
+      "mensagem":"Produto excluído com sucesso"
+   }
+}
 ```
