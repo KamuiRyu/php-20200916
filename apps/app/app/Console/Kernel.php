@@ -13,8 +13,17 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         // $schedule->command('inspire')->hourly();
+
+        // Para produção
+        /*$schedule->call('App\Http\Controllers\ProductController@syncProducts')
+            ->dailyAt(00)
+            ->name('sync_products')
+            ->withoutOverlapping(10);
+        */
+
+        //Para teste
         $schedule->call('App\Http\Controllers\ProductController@syncProducts')
-            ->dailyAt('00:00')
+            ->everyMinute()
             ->name('sync_products')
             ->withoutOverlapping(10);
     }

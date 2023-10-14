@@ -31,7 +31,6 @@ class Product extends Model
         "nutriscore_grade",
         "main_category",
         "image_url",
-        "status",
         'imported_t',
         'created_t',
         'last_modified_t',
@@ -89,7 +88,7 @@ class Product extends Model
                 $data = self::where('code', $code)->first();
                 return ['success' => true, 'message' => 'Produto atualizado com sucesso', 'data' => $data];
             } else {
-                return ['success' => false, 'message' => 'Produto não encontrado', 'code' => 404];
+                return ['success' => false, 'message' => 'Produto não encontrado', 'code' => 200];
             }
         } catch (\Exception $e) {
             return ['success' => false, 'message' => 'Erro na atualização: ' . $e->getMessage()];
@@ -100,7 +99,7 @@ class Product extends Model
     public static function getAllProducts($data, $offset)
     {
         try {
-            $query = self::filterProducts($data['data'], $offset);
+            $query = self::filterProducts($data, $offset);
             if (!empty($query)) {
                 return ['success' => true, 'data' => $query];
             } else {

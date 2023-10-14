@@ -12,6 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('products', function (Blueprint $table) {
+            $table->bigIncrements('id');
             $table->bigInteger('code')->unique();
             $table->enum('status', ['draft', 'trash', 'published']);
             $table->timestamp('imported_t', 0);

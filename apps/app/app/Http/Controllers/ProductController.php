@@ -170,7 +170,11 @@ class ProductController extends Controller
     public function getAllProducts(Request $request)
     {
         try {
-            $data = $request->all();
+            $jsonValid = self::checkJson($request->getContent());
+            if($jsonValid === false){
+                throw new \Exception("O formato do corpo enviado é inválido. Por favor, utilize um JSON correto.", 404);
+            }
+            $data = $request->all() ?? "";
             $offset = isset($data['offset']) ? intval($data['offset']) : 0;
             $filtros = isset($data['filtros']) ? $data['filtros'] : '';
             if (!empty($filtros)) {
@@ -180,7 +184,7 @@ class ProductController extends Controller
                 }
             }
             $result = Product::getAllProducts($filtros, $offset);
-            if($result['success'] === false){
+            if ($result['success'] === false) {
                 throw new \Exception($result['message'], 500);
             }
             return response()->json([
@@ -188,12 +192,12 @@ class ProductController extends Controller
                     'status' => 200,
                     'mensagem' => 'Dados retornados com sucesso',
                 ],
-                'response' => [
-                    'count' => isset($result['data']) ? count($result['data']) : 0,
+                'retorno' => [
+                    'contador' => isset($result['data']) ? count($result['data']) : 0,
                     'offset' => $offset,
                     'items' => $result['data'] ?? $result['message'] ?? null,
                 ]
-            ]);
+            ], 200);
         } catch (\Throwable $th) {
             $code = $th->getCode() ?: 500;
             $message =  json_decode($th->getMessage(), true) ?? $th->getMessage();
@@ -206,22 +210,23 @@ class ProductController extends Controller
         }
     }
 
-    public function deleteProduct($code){
-       try {
-        if(empty($code)){
-            throw new \Exception('Não foi encontrado o codigo do produto', 400);
-        }
-        $result = Product::deleteProduct($code);
-        if($result['success'] === false){
-            throw new \Exception($result['message'], 200);
-        }
-        return response()->json([
-            'cabecalho' => [
-                'status' => 200,
-                'mensagem' => 'Produto excluído com sucesso',
-            ]
-        ]);
-       } catch (\Throwable $th) {
+    public function deleteProduct($code)
+    {
+        try {
+            if (empty($code)) {
+                throw new \Exception('Não foi encontrado o codigo do produto', 400);
+            }
+            $result = Product::deleteProduct($code);
+            if ($result['success'] === false) {
+                throw new \Exception($result['message'], 200);
+            }
+            return response()->json([
+                'cabecalho' => [
+                    'status' => 204,
+                    'mensagem' => 'Produto excluído com sucesso',
+                ]
+            ], 204);
+        } catch (\Throwable $th) {
             $code = $th->getCode() ?: 500;
             $message =  json_decode($th->getMessage(), true) ?? $th->getMessage();
             return response()->json([
@@ -233,17 +238,22 @@ class ProductController extends Controller
         }
     }
 
-    public function updateProduct($code, Request $request){
+    public function updateProduct($code, Request $request)
+    {
         try {
+            $jsonValid = self::checkJson($request->getContent());
+            if($jsonValid === false){
+                throw new \Exception("O formato do corpo enviado é inválido. Por favor, utilize um JSON correto.", 404);
+            }
             $data = $request->all();
             $validData = $this->validUpdate($data);
-            if($validData['success'] === false){
+            if ($validData['success'] === false) {
                 throw new \Exception(json_encode($validData['errors']), 400);
             }
 
             $result = Product::updateProduct($code, $validData['data']);
 
-            if($result['success'] === false){
+            if ($result['success'] === false) {
                 $code = $result['code'] ?? 500;
                 throw new \Exception($result['message'], $code);
             }
@@ -255,7 +265,6 @@ class ProductController extends Controller
                 ],
                 'retorno' => $result['data'] ?? $result['message'],
             ]);
-
         } catch (\Throwable $th) {
             $code = $th->getCode() ?: 500;
             $message =  json_decode($th->getMessage(), true) ?? $th->getMessage();
@@ -268,7 +277,8 @@ class ProductController extends Controller
         }
     }
 
-    public function validUpdate($data){
+    public function validUpdate($data)
+    {
         $allowedFields = [
             "url" => 'string',
             "creator" => 'string',
@@ -289,10 +299,10 @@ class ProductController extends Controller
             "main_category" => 'string',
             "image_url" => 'string',
         ];
-    
+
         $filteredData = [];
         $errors = [];
-    
+
         foreach ($data as $key => $value) {
             if (array_key_exists($key, $allowedFields)) {
                 if (gettype($value) === $allowedFields[$key]) {
@@ -304,14 +314,14 @@ class ProductController extends Controller
                 $errors[$key] = "Campo '$key' não é permitido";
             }
         }
-    
-        if(!empty($errors)){
+
+        if (!empty($errors)) {
             return ['success' => false, 'errors' => $errors];
         }
-    
+
         return ['success' => true, 'data' => $filteredData];
     }
-    
+
     public function validParameters($data)
     {
         $filters = [
@@ -352,72 +362,54 @@ class ProductController extends Controller
         ];
         $validData = [];
         $errors = [];
+        if (!empty($data)) {
+            foreach ($data as $value) {
+                $key = $value["campo"] ?? null;
+                $condicao = isset($value['condicao']) && !empty($value['condicao']) ? strtolower($value['condicao']) : "=";
+                $valor = $value["valor"] ?? null;
+                $valor2 = $value["valor2"] ?? null;
+                if (!empty($key)) {
+                    if (array_key_exists($key, $filters)) {
 
-        foreach ($data as $value) {
-            $key = $value["campo"] ?? null;
-            if (!empty($key)) {
-                $condicao = strtolower($value['condicao']) ?? "=";
-                
-                if (array_key_exists($key, $filters)) {
-                    
-                    $filterType = $filters[$key];
-                    if ($filterType === 'int') {
-                        if (is_numeric($value['valor']) && is_int($value['valor'] + 0)) {
-                            if ($condicao === 'between') {
-                                $errors[] = "A condição between não pode ser utilizada no campo '$key'";
-                            } else if($condicao === 'ilike'){
-                                $errors[] = "A condição ilike não pode ser utilizada no campo '$key'";
-                            }else {
-                                
-                                $validData[$key]['valor'] = (int) $value['valor'];
+                        $filterType = $filters[$key];
+                        if ($filterType === 'int') {
+                            if (is_numeric($valor) && is_int($valor + 0)) {
+                                if ($condicao === 'between') {
+                                    $errors[] = "A condição between não pode ser utilizada no campo '$key'";
+                                } else if ($condicao === 'ilike') {
+                                    $errors[] = "A condição ilike não pode ser utilizada no campo '$key'";
+                                } else {
+
+                                    $validData[$key]['valor'] = (int) $valor;
+                                }
+                            } else {
+                                $errors[] = "O valor para '$key' deve ser um número inteiro.";
                             }
-                        } else {
-                            $errors[] = "O valor para '$key' deve ser um número inteiro.";
-                        }
-                    } elseif (is_array($filterType)) {
-                        if (in_array($value['valor'], $filterType)) {
+                        } elseif (is_array($filterType)) {
+                            if (in_array($valor, $filterType)) {
+                                if ($condicao === 'between') {
+                                    $errors[] = "A condição between não pode ser utilizada no campo '$key'";
+                                } else if ($condicao === '>=' || $condicao === '<=' || $condicao === '>' || $condicao === '>') {
+                                    $errors[] = "A condição '$condicao' não pode ser utilizada no campo '$key'";
+                                } else {
+                                    $validData[$key]['valor'] = $valor;
+                                }
+                            } else {
+                                $errors[] = "O valor para '$key' não está em uma lista parametros aceitos";
+                            }
+                        } elseif ($filterType === 'string') {
                             if ($condicao === 'between') {
                                 $errors[] = "A condição between não pode ser utilizada no campo '$key'";
                             } else if ($condicao === '>=' || $condicao === '<=' || $condicao === '>' || $condicao === '>') {
                                 $errors[] = "A condição '$condicao' não pode ser utilizada no campo '$key'";
                             } else {
-                                $validData[$key]['valor'] = $value['valor'];
+                                $validData[$key]['valor'] = $valor;
                             }
-                        } else {
-                            $errors[] = "O valor para '$key' não está em uma lista parametros aceitos";
-                        }
-                    } elseif ($filterType === 'string') {
-                        if ($condicao === 'between') {
-                            $errors[] = "A condição between não pode ser utilizada no campo '$key'";
-                        } else if ($condicao === '>=' || $condicao === '<=' || $condicao === '>' || $condicao === '>') {
-                            $errors[] = "A condição '$condicao' não pode ser utilizada no campo '$key'";
-                        } else {
-                            $validData[$key]['valor'] = $value['valor'];
-                        }
-                    } elseif ($filterType === 'date') {
-                        $regex = '/^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/(?:\d{2}|\d{4})$/';
-                        if (preg_match($regex, $value['valor'])) {
-                            $formatsToTry = ['d-m-y', 'd-m-Y'];
-                            $dateValue = str_replace('/', '-', $value['valor']);
-                            $date = null;
-                            foreach ($formatsToTry as $format) {
-                                $date = DateTime::createFromFormat($format, $dateValue);
-                                if ($date != false) {
-                                    break;
-                                }
-                            }
-                            if ($date instanceof DateTime) {
-                                $validData[$key]['valor'] = $date->format('Y-m-d');
-                            } else {
-                                $errors[] = "O valor para '$key' não é uma data válida.";
-                            }
-                        } else {
-                            $errors[] = "O valor para '$key' não é uma data válida.";
-                        }
-                        if ($condicao === 'between') {
-                            if (isset($value['valor2']) && preg_match($regex, $value['valor2'])) {
+                        } elseif ($filterType === 'date') {
+                            $regex = '/^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/(?:\d{2}|\d{4})$/';
+                            if (preg_match($regex, $valor)) {
                                 $formatsToTry = ['d-m-y', 'd-m-Y'];
-                                $dateValue = str_replace('/', '-', $value['valor2']);
+                                $dateValue = str_replace('/', '-', $valor);
                                 $date = null;
                                 foreach ($formatsToTry as $format) {
                                     $date = DateTime::createFromFormat($format, $dateValue);
@@ -426,32 +418,51 @@ class ProductController extends Controller
                                     }
                                 }
                                 if ($date instanceof DateTime) {
-                                    $validData[$key]['valor2'] = $date->format('Y-m-d');
+                                    $validData[$key]['valor'] = $date->format('Y-m-d');
                                 } else {
-                                    $errors[] = "O valor para '$key' valor 2 não é uma data válida.";
+                                    $errors[] = "O valor para '$key' não é uma data válida.";
                                 }
                             } else {
-                                $errors[] = "O valor 2 para '$key' é obrigatório na condição between.";
+                                $errors[] = "O valor para '$key' não é uma data válida.";
+                            }
+                            if ($condicao === 'between') {
+                                if (isset($value['valor2']) && preg_match($regex, $valor2)) {
+                                    $formatsToTry = ['d-m-y', 'd-m-Y'];
+                                    $dateValue = str_replace('/', '-', $valor2);
+                                    $date = null;
+                                    foreach ($formatsToTry as $format) {
+                                        $date = DateTime::createFromFormat($format, $dateValue);
+                                        if ($date != false) {
+                                            break;
+                                        }
+                                    }
+                                    if ($date instanceof DateTime) {
+                                        $validData[$key]['valor2'] = $date->format('Y-m-d');
+                                    } else {
+                                        $errors[] = "O valor para '$key' valor 2 não é uma data válida.";
+                                    }
+                                } else {
+                                    $errors[] = "O valor 2 para '$key' é obrigatório na condição between.";
+                                }
                             }
                         }
-                    }
-                    
 
-                    if (in_array($condicao, $operators)) {
-                        $validData[$key]['condicao'] = $condicao;
+
+                        if (in_array($condicao, $operators)) {
+                            $validData[$key]['condicao'] = $condicao;
+                        } else {
+                            $errors[] = "A condição '$condicao' não é válida";
+                        }
                     } else {
-                        $errors[] = "A condição '$condicao' não é válida";
+                        $errors[] = "O filtro '$key' não é permitido na consulta.";
                     }
-                    
                 } else {
-                    $errors[] = "O filtro '$key' não é permitido na consulta.";
+                    $errors[] = "O campo não foi informado no filtro";
                 }
-            } else {
-                $errors[] = "O campo não foi informado no filtro";
             }
-        }
-        if (!empty($errors)) {
-            return ['success' => false, 'errors' => $errors];
+            if (!empty($errors)) {
+                return ['success' => false, 'errors' => $errors];
+            }
         }
 
         return ['success' => true, 'data' => $validData];
@@ -529,5 +540,15 @@ class ProductController extends Controller
         $returnedItems = array_values($returnedItems);
         gzclose($fileGz);
         return $returnedItems;
+    }
+
+    public static function checkJson($data)
+    {
+        $jsonData = json_decode($data);
+        if ($jsonData !== null) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

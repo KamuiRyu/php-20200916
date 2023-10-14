@@ -1,6 +1,8 @@
-version: "3"
+version: "3.7"
 services:
   app:
+    image: app
+    container_name: app
     build:
       context: ./apps/app
       dockerfile: Dockerfile-api
@@ -15,6 +17,7 @@ services:
       - dev-network
 
   nginx:
+    container_name: nginx
     image: nginx:alpine
     restart: unless-stopped
     ports:
@@ -38,21 +41,6 @@ services:
       POSTGRES_PASSWORD: Acesso123
     volumes:
       - ./docker/pgdata:/var/lib/postgresql/data
-    networks:
-      - dev-network
-    restart: unless-stopped
-
-  web:
-    stdin_open: true
-    build:
-      context: ./apps/web
-      dockerfile: Dockerfile-web
-    container_name: web
-    ports:
-      - 4000:4000
-    volumes:
-      - ./apps/web:/usr/src/app
-      - /usr/src/app/node_modules
     networks:
       - dev-network
     restart: unless-stopped

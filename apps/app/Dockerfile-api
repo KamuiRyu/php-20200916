@@ -32,8 +32,13 @@ RUN useradd -G www-data,root -u $uid -d /home/$user $user
 RUN mkdir -p /home/$user/.composer && \
     chown -R $user:$user /home/$user
 
+RUN chmod -R 755 /var/www
+RUN chown -R $user:$user /var/www
+
 WORKDIR /var/www
 
-COPY .env.example .env
+COPY . /var/www
 
-USER root
+COPY .env /var/www/
+
+USER $user
