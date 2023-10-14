@@ -278,8 +278,8 @@ Resposta:
       "status":200,
       "mensagem":"Dados retornados com sucesso"
    },
-   "response":{
-      "count":100,
+   "retorno":{
+      "contador":100,
       "offset":0,
       "items":[
          {
@@ -334,5 +334,103 @@ Resposta:
          }
       ]
    }
+]
+```
+
+#### `GET /api/products/{code}`
+
+Resposta:
+
+```json
+[
+   "cabecalho":{
+      "status":200,
+      "mensagem":"Dados retornados com sucesso"
+   },
+   "retorno":{
+      "code":17,
+      "status":"published",
+      "imported_t":"2023-10-13 17:51:34",
+      "url":"http:\/\/world-en.openfoodfacts.org\/product\/0000000000017\/vitoria-crackers",
+      "creator":"kiliweb",
+      "product_name":"Vitória crackers",
+      "quantity":"",
+      "brands":"",
+      "categories":"",
+      "labels":"",
+      "cities":"",
+      "purchase_places":"",
+      "stores":"",
+      "ingredients_text":"",
+      "traces":"",
+      "serving_size":"",
+      "serving_quantity":null,
+      "nutriscore_score":null,
+      "nutriscore_grade":"",
+      "main_category":"",
+      "image_url":"https:\/\/static.openfoodfacts.org\/images\/products\/000\/000\/000\/0017\/front_fr.4.400.jpg",
+      "created_t":"2018-06-15T13:38:00.000000Z",
+      "last_modified_t":"2019-06-25T14:55:18.000000Z"
+   }
+]
+```
+
+#### `PUT /api/products/{code}: 
+
+Solicitação:
+```json
+[
+   "product_name":"Teste",
+   "categories":"fruta"
+]
+```
+
+Resposta:
+
+```json
+[
+   "cabecalho":{
+      "status":200,
+      "mensagem":"Dados atualizados com sucesso"
+   },
+   "retorno":{
+      "id":14,
+      "code":31,
+      "status":"published",
+      "imported_t":"2023-10-13 19:20:11",
+      "url":"http:\/\/world-en.openfoodfacts.org\/product\/0000000000031\/cacao",
+      "creator":"teste",
+      "product_name":"Cacao",
+      "quantity":"130 g",
+      "brands":"",
+      "categories":"",
+      "labels":"",
+      "cities":"",
+      "purchase_places":"",
+      "stores":"",
+      "ingredients_text":"",
+      "traces":"",
+      "serving_size":"",
+      "serving_quantity":null,
+      "nutriscore_score":null,
+      "nutriscore_grade":"",
+      "main_category":"",
+      "image_url":"https:\/\/static.openfoodfacts.org\/images\/products\/000\/000\/000\/0031\/front_fr.3.400.jpg",
+      "created_t":"2018-10-14T00:06:14.000000Z",
+      "last_modified_t":"2023-10-14T00:15:48.000000Z"
+   }
+]
+```
+
+#### `DELETE /api/products/{code}`
+
+Resposta:
+
+```json
+[
+   "cabecalho""=>"[
+      "status"=> 204,
+      "mensagem""=>""Produto excluído com sucesso"
+   ]
 ]
 ```
