@@ -127,23 +127,212 @@ A API oferece as seguintes rotas:
 -    `PUT /api/products/{code}`: Atualiza um produto existente.
 -    `DELETE /api/products/{code}`: Exclui um produto pelo código.
 
+### Descrição dos Campos
+
+Aqui está a descrição de todos os campos usados nas rotas da API:
+
+#### `code`
+
+- **Tipo**: int
+- **Condições Permitidas**: =, <, >, <=, >=, like
+
+#### `status`
+
+- **Tipo**: string
+- **Condições permitidas**: =, ilike, like
+- **Valores permitidos**: 'draft', 'published', 'trash'
+
+#### `url`
+
+- **Tipo**: string
+- **Condições permitidas**: =, ilike, like, <>
+
+#### `creator`
+
+- **Tipo**: string
+- **Condições permitidas**: =, ilike, like, <>
+
+#### `product_name`
+
+- **Tipo**: string
+- **Condições permitidas**: =, ilike, like, <>
+
+#### `quantity`
+
+- **Tipo**: string
+- **Condições permitidas**: =, ilike, like, <>
+
+#### `brands`
+
+- **Tipo**: string
+- **Condições permitidas**: =, ilike, like, <>
+
+#### `categories`
+
+- **Tipo**: string
+- **Condições permitidas**: =, ilike, like, <>
+
+#### `labels`
+
+- **Tipo**: string
+- **Condições permitidas**: =, ilike, like, <>
+
+#### `cities`
+
+- **Tipo**: string
+- **Condições permitidas**: =, ilike, like, <>
+
+#### `purchase_places`
+
+- **Tipo**: string
+- **Condições permitidas**: =, ilike, like, <>
+
+#### `stores`
+
+- **Tipo**: string
+- **Condições permitidas**: =, ilike, like, <>
+
+#### `ingredients_text`
+
+- **Tipo**: string
+- **Condições permitidas**: =, ilike, like, <>
+
+#### `traces`
+
+- **Tipo**: string
+- **Condições permitidas**: =, ilike, like, <>
+
+#### `serving_size`
+
+- **Tipo**: string
+- **Condições permitidas**: =, ilike, like, <>
+
+#### `serving_quantity`
+
+- **Tipo**: string
+- **Condições permitidas**: =, ilike, like, <>
+
+#### `nutriscore_score`
+
+- **Tipo**: string
+- **Condições permitidas**: =, ilike, like, <>
+
+#### `nutriscore_grade`
+
+- **Tipo**: string
+- **Condições permitidas**: =, ilike, like, <>
+
+#### `main_category`
+
+- **Tipo**: string
+- **Condições permitidas**: =, ilike, like, <>
+
+#### `image_url`
+
+- **Tipo**: string
+- **Condições permitidas**: =, ilike, like, <>
+
+#### `imported_t`
+
+- **Tipo**: date
+- **Condições permitidas**: =, <, >, <=, >=, between, <>
+
+#### `created_t`
+
+- **Tipo**: date
+- **Condições permitidas**: =, <, >, <=, >=, between, <>
+
+#### `last_modified_t`
+
+- **Tipo**: date
+- **Condições permitidas**: =, <, >, <=, >=, between, <>
+
+#### `offset`
+
+- **Tipo**: int
+- **Descrição**: A API só retornar 100 linhas por vez, utilizando campo offset é possível retornar mais 100 linhas sem repetir as anteriores.
+
 ### Exemplos de Solicitação e Resposta
 
 #### `GET /api/products`
+
+Solicitação:
+```json
+{
+   "filtros":[
+      {
+         "campo":"imported_t",
+         "condição":"=",
+         "valor":"13/10/23"
+      }
+   ],
+   "offset": 0
+}
+```
 
 Resposta:
 
 ```json
 [
-    {
-        "code": "12345",
-        "product_name": "Produto 1",
-        "price": 10.99
-    },
-    {
-        "code": "67890",
-        "product_name": "Produto 2",
-        "price": 19.99
-    }
+   "cabecalho":{
+      "status":200,
+      "mensagem":"Dados retornados com sucesso"
+   },
+   "response":{
+      "count":100,
+      "offset":0,
+      "items":[
+         {
+            "code":17,
+            "status":"published",
+            "imported_t":"2023-10-13 17:51:34",
+            "url":"http:\/\/world-en.openfoodfacts.org\/product\/0000000000017\/vitoria-crackers",
+            "creator":"kiliweb",
+            "product_name":"Vitória crackers",
+            "quantity":"",
+            "brands":"",
+            "categories":"",
+            "labels":"",
+            "cities":"",
+            "purchase_places":"",
+            "stores":"",
+            "ingredients_text":"",
+            "traces":"",
+            "serving_size":"",
+            "serving_quantity":null,
+            "nutriscore_score":null,
+            "nutriscore_grade":"",
+            "main_category":"",
+            "image_url":"https:\/\/static.openfoodfacts.org\/images\/products\/000\/000\/000\/0017\/front_fr.4.400.jpg",
+            "created_t":"2018-06-15T13:38:00.000000Z",
+            "last_modified_t":"2019-06-25T14:55:18.000000Z"
+         },
+         {
+            "code":31,
+            "status":"published",
+            "imported_t":"2023-10-13 17:51:34",
+            "url":"http:\/\/world-en.openfoodfacts.org\/product\/0000000000031\/cacao",
+            "creator":"isagoofy",
+            "product_name":"Cacao",
+            "quantity":"130 g",
+            "brands":"",
+            "categories":"",
+            "labels":"",
+            "cities":"",
+            "purchase_places":"",
+            "stores":"",
+            "ingredients_text":"",
+            "traces":"",
+            "serving_size":"",
+            "serving_quantity":null,
+            "nutriscore_score":null,
+            "nutriscore_grade":"",
+            "main_category":"",
+            "image_url":"https:\/\/static.openfoodfacts.org\/images\/products\/000\/000\/000\/0031\/front_fr.3.400.jpg",
+            "created_t":"2018-10-14T00:06:14.000000Z",
+            "last_modified_t":"2018-10-14T00:06:57.000000Z"
+         }
+      ]
+   }
 ]
 ```
