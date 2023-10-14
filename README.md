@@ -375,7 +375,7 @@ Resposta:
 }
 ```
 
-#### `PUT /api/products/{code}: 
+#### `PUT /api/products/{code}`: 
 
 Solicitação:
 ```json
