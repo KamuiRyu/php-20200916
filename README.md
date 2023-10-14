@@ -112,8 +112,10 @@ Seu servidor estará disponível em: http://localhost:8000
 ## Comandos
 Alguns comandos personalizados
 
--   php artisan app:syncproducts    #Força a sincronização dos produtos.
-
+- #Força a sincronização dos produtos.
+```bash
+php artisan app:syncproducts   
+```
 
 ## Documentação API
 
