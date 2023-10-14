@@ -38,7 +38,7 @@ class ProductController extends Controller
                 'retorno' => [
                     'db_conexao' => $dbConnection ? 'OK' : 'NOK',
                     'ultima_sincronizacao' => $lastSync ?? "",
-                    'resposta_ultima_sincronizacao' => $lastCronRun['response'] ? json_decode($lastCronRun['response']) : "",
+                    'resposta_ultima_sincronizacao' => isset($lastCronRun['response']) ? json_decode($lastCronRun['response']) : "",
                     'uso_memoria' => $memoryUsage
                 ]
             ]);
