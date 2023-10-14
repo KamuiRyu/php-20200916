@@ -461,35 +461,35 @@ Resposta:
 #### `Todas as rotas`
 
 ```bash
-php artisan test --filter ProductApiTest
+php artisan test --filter ProductsApiTest
 ```
 
 #### `GET /api/`
 
 ```bash
-php artisan test --filter ProductApiTest::testHealthCheck
+php artisan test --filter ProductsApiTest::testHealthCheck
 ```
 
 #### `GET /api/products`
 
 ```bash
-php artisan test --filter ProductApiTest::testGetAllProducts
+php artisan test --filter ProductsApiTest::testGetAllProducts
 ```
 
 #### `GET /api/products/{code}`
 
 ```bash
-php artisan test --filter ProductApiTest::testGetProduct
+php artisan test --filter ProductsApiTest::testGetProduct
 ```
 
 #### `PUT /api/products/{code}`
 
 ```bash
-php artisan test --filter ProductApiTest::testUpdateProduct
+php artisan test --filter ProductsApiTest::testUpdateProduct
 ```
 
 #### `DELETE /api/products/{code}`
 
 ```bash
-php artisan test --filter ProductApiTest::testDeleteProduct
+php artisan test --filter ProductsApiTest::testDeleteProduct
 ```
